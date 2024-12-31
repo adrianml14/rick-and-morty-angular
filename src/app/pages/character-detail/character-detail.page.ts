@@ -1,20 +1,51 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
+import { ActivatedRoute } from '@angular/router';
+import { RickAndMortyService } from 'src/app/services/rick-and-morty.service';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @Component({
   selector: 'app-character-detail',
   templateUrl: './character-detail.page.html',
   styleUrls: ['./character-detail.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, IonicModule, SharedModule]
 })
 export class CharacterDetailPage implements OnInit {
 
-  constructor() { }
+  characterId: string = '';
+  character = null as any;
+
+  constructor(
+    private actRoute: ActivatedRoute,
+     private rickAndMortySvc: RickAndMortyService
+  ) { 
+    this.characterId = this.actRoute.snapshot.paramMap.get('id') as string;
+    console.log(this.characterId);
+  }
 
   ngOnInit() {
   }
 
+  ionViewWillEnter(){
+    this.getCharacter()
+  }
+
+  getCharacter(){
+
+    this.rickAndMortySvc.getCharactersById(this.characterId).subscribe({
+      
+      next: (res: any) => {
+        console.log(res);
+        this.character=res;
+      },
+      error: (error: any)=>{
+
+        }
+      })
+    }
 }
+
+
