@@ -5,6 +5,8 @@ import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { RickAndMortyService } from 'src/app/services/rick-and-morty.service';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { addIcons } from 'ionicons';
+import * as icons from 'ionicons/icons';
 
 @Component({
   selector: 'app-character-detail',
@@ -26,7 +28,12 @@ export class CharacterDetailPage implements OnInit {
     console.log(this.characterId);
   }
 
+  registerIcons() {
+    addIcons(icons);
+  }
+
   ngOnInit() {
+    this.registerIcons()
   }
 
   ionViewWillEnter(){
@@ -38,7 +45,6 @@ export class CharacterDetailPage implements OnInit {
     this.rickAndMortySvc.getCharactersById(this.characterId).subscribe({
       
       next: (res: any) => {
-        console.log(res);
         this.character=res;
       },
       error: (error: any)=>{
@@ -46,6 +52,22 @@ export class CharacterDetailPage implements OnInit {
         }
       })
     }
+
+    getEpisodes(){
+
+      for(let url of this.character.episode){
+              this.rickAndMortySvc.getByUrl(url).subscribe({
+        
+        next: (res: any) => {
+          console.log(res);
+
+        },
+        error: (error: any)=>{
+  
+          }
+        })
+      }
+      }
 }
 
 
