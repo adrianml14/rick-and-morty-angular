@@ -19,6 +19,7 @@ export class CharacterDetailPage implements OnInit {
 
   characterId: string = '';
   character = null as any;
+  episodes: any[] = [];
 
   constructor(
     private actRoute: ActivatedRoute,
@@ -46,6 +47,7 @@ export class CharacterDetailPage implements OnInit {
       
       next: (res: any) => {
         this.character=res;
+        this.getEpisodes();
       },
       error: (error: any)=>{
 
@@ -56,10 +58,12 @@ export class CharacterDetailPage implements OnInit {
     getEpisodes(){
 
       for(let url of this.character.episode){
-              this.rickAndMortySvc.getByUrl(url).subscribe({
+              
+        this.rickAndMortySvc.getByUrl(url).subscribe({
         
         next: (res: any) => {
-          console.log(res);
+          
+          this.episodes.push(res)
 
         },
         error: (error: any)=>{
